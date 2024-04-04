@@ -1,0 +1,13 @@
+{
+    email rockzaza007@gmail.com
+}
+
+https://myapp.local {
+    tls internal
+    reverse_proxy host.docker.internal:9999
+}
+
+https://dev.myapp.local {
+    tls internal
+    reverse_proxy localhost:1337
+}

@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "weather_authorizations",
+  "info": {
+    "singularName": "weather-authorization",
+    "pluralName": "weather-authorizations",
+    "displayName": "weather-authorization",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email",
+      "unique": true
+    },
+    "role": {
+      "type": "string",
+      "unique": false,
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,5 @@
+StrapiBackend
+node_modules
+.firebase
+.firebaserc
+strapi_database

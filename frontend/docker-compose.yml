@@ -1,0 +1,73 @@
+#Using .env file
+version: '3'
+
+name: weather-app-cyber-project
+
+networks:
+  my-network:
+    driver: bridge
+  my-caddy:
+    external: true
+
+services:
+  frontend:
+    build: .
+    image: weather/app:1.0.0
+    restart: always
+    container_name: weather-frontend
+    ports:
+      - ${CLIENT_PORT}
+    networks:
+      - my-network
+  backend:
+    build: ./StrapiBackend/
+    image: ${SERVER_IMAGE}
+    restart: always
+    container_name: strapi-backend
+    ports:
+      - ${SERVER_PORT}
+    environment: #environment of strapi 
+      - DATABASE_CLIENT=postgres
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_SSL=false
+    depends_on:
+      - db
+      - proxy
+    networks:
+      - my-network
+
+  db:
+    image: postgres:latest
+    restart: always
+    container_name: weather-db
+    ports:
+      - ${DB_PORTS}
+    environment:
+      - ${PASSWORD}
+      - ${USER}
+      - ${DB}
+    volumes:
+      - ../strapi_database/data:/var/lib/postgresql/data
+    networks:
+      - my-network
+
+  proxy:
+    image: caddy:latest
+    container_name: proxy-server
+    ports:
+      - ${PROXY_PORT_1}
+      - ${PROXY_PORT_2}
+    environment:
+      - EMAIL=user@example.com #change to your email
+    volumes:
+      - ../StrapiBackend/Caddyfile:/etc/caddy/Caddyfile
+      # - ./caddy_data:/data
+      # - ./caddy_config:/config
+    networks:
+      - my-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
