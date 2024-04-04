@@ -23,6 +23,12 @@
       "type": "string",
       "unique": false,
       "required": true
+    },
+    "tel": {
+      "type": "string",
+      "maxLength": 10,
+      "minLength": 10,
+      "required": true
     }
   }
 }

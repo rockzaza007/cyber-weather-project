@@ -33,9 +33,17 @@ export interface AdminPermission extends Schema.CollectionType {
     role: Attribute.Relation<'admin::permission', 'manyToOne', 'admin::role'>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'admin::permission', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'admin::permission',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'admin::permission', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'admin::permission',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -81,14 +89,19 @@ export interface AdminUser extends Schema.CollectionType {
       }>;
     resetPasswordToken: Attribute.String & Attribute.Private;
     registrationToken: Attribute.String & Attribute.Private;
-    isActive: Attribute.Boolean & Attribute.Private & Attribute.DefaultTo<false>;
-    roles: Attribute.Relation<'admin::user', 'manyToMany', 'admin::role'> & Attribute.Private;
+    isActive: Attribute.Boolean &
+      Attribute.Private &
+      Attribute.DefaultTo<false>;
+    roles: Attribute.Relation<'admin::user', 'manyToMany', 'admin::role'> &
+      Attribute.Private;
     blocked: Attribute.Boolean & Attribute.Private & Attribute.DefaultTo<false>;
     preferedLanguage: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'admin::user', 'oneToOne', 'admin::user'> & Attribute.Private;
-    updatedBy: Attribute.Relation<'admin::user', 'oneToOne', 'admin::user'> & Attribute.Private;
+    createdBy: Attribute.Relation<'admin::user', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'admin::user', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
   };
 }
 
@@ -124,11 +137,17 @@ export interface AdminRole extends Schema.CollectionType {
       }>;
     description: Attribute.String;
     users: Attribute.Relation<'admin::role', 'manyToMany', 'admin::user'>;
-    permissions: Attribute.Relation<'admin::role', 'oneToMany', 'admin::permission'>;
+    permissions: Attribute.Relation<
+      'admin::role',
+      'oneToMany',
+      'admin::permission'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'admin::role', 'oneToOne', 'admin::user'> & Attribute.Private;
-    updatedBy: Attribute.Relation<'admin::role', 'oneToOne', 'admin::user'> & Attribute.Private;
+    createdBy: Attribute.Relation<'admin::role', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'admin::role', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
   };
 }
 
@@ -170,14 +189,26 @@ export interface AdminApiToken extends Schema.CollectionType {
         minLength: 1;
       }>;
     lastUsedAt: Attribute.DateTime;
-    permissions: Attribute.Relation<'admin::api-token', 'oneToMany', 'admin::api-token-permission'>;
+    permissions: Attribute.Relation<
+      'admin::api-token',
+      'oneToMany',
+      'admin::api-token-permission'
+    >;
     expiresAt: Attribute.DateTime;
     lifespan: Attribute.BigInteger;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'admin::api-token', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'admin::api-token',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'admin::api-token', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'admin::api-token',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -205,12 +236,24 @@ export interface AdminApiTokenPermission extends Schema.CollectionType {
       Attribute.SetMinMaxLength<{
         minLength: 1;
       }>;
-    token: Attribute.Relation<'admin::api-token-permission', 'manyToOne', 'admin::api-token'>;
+    token: Attribute.Relation<
+      'admin::api-token-permission',
+      'manyToOne',
+      'admin::api-token'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'admin::api-token-permission', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'admin::api-token-permission',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'admin::api-token-permission', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'admin::api-token-permission',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -259,9 +302,17 @@ export interface AdminTransferToken extends Schema.CollectionType {
     lifespan: Attribute.BigInteger;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'admin::transfer-token', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'admin::transfer-token',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'admin::transfer-token', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'admin::transfer-token',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -296,9 +347,17 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'admin::transfer-token-permission', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'admin::transfer-token-permission',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'admin::transfer-token-permission', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'admin::transfer-token-permission',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -335,7 +394,11 @@ export interface PluginUploadFile extends Schema.CollectionType {
     provider: Attribute.String & Attribute.Required;
     provider_metadata: Attribute.JSON;
     related: Attribute.Relation<'plugin::upload.file', 'morphToMany'>;
-    folder: Attribute.Relation<'plugin::upload.file', 'manyToOne', 'plugin::upload.folder'> &
+    folder: Attribute.Relation<
+      'plugin::upload.file',
+      'manyToOne',
+      'plugin::upload.folder'
+    > &
       Attribute.Private;
     folderPath: Attribute.String &
       Attribute.Required &
@@ -348,9 +411,17 @@ export interface PluginUploadFile extends Schema.CollectionType {
       >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'plugin::upload.file', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'plugin::upload.file',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'plugin::upload.file', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'plugin::upload.file',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -380,9 +451,21 @@ export interface PluginUploadFolder extends Schema.CollectionType {
         number
       >;
     pathId: Attribute.Integer & Attribute.Required & Attribute.Unique;
-    parent: Attribute.Relation<'plugin::upload.folder', 'manyToOne', 'plugin::upload.folder'>;
-    children: Attribute.Relation<'plugin::upload.folder', 'oneToMany', 'plugin::upload.folder'>;
-    files: Attribute.Relation<'plugin::upload.folder', 'oneToMany', 'plugin::upload.file'>;
+    parent: Attribute.Relation<
+      'plugin::upload.folder',
+      'manyToOne',
+      'plugin::upload.folder'
+    >;
+    children: Attribute.Relation<
+      'plugin::upload.folder',
+      'oneToMany',
+      'plugin::upload.folder'
+    >;
+    files: Attribute.Relation<
+      'plugin::upload.folder',
+      'oneToMany',
+      'plugin::upload.file'
+    >;
     path: Attribute.String &
       Attribute.Required &
       Attribute.SetMinMax<
@@ -393,9 +476,17 @@ export interface PluginUploadFolder extends Schema.CollectionType {
       >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'plugin::upload.folder', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'plugin::upload.folder',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'plugin::upload.folder', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'plugin::upload.folder',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -428,14 +519,23 @@ export interface PluginContentReleasesRelease extends Schema.CollectionType {
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'plugin::content-releases.release', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'plugin::content-releases.release',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'plugin::content-releases.release', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'plugin::content-releases.release',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
 
-export interface PluginContentReleasesReleaseAction extends Schema.CollectionType {
+export interface PluginContentReleasesReleaseAction
+  extends Schema.CollectionType {
   collectionName: 'strapi_release_actions';
   info: {
     singularName: 'release-action';
@@ -455,7 +555,10 @@ export interface PluginContentReleasesReleaseAction extends Schema.CollectionTyp
   };
   attributes: {
     type: Attribute.Enumeration<['publish', 'unpublish']> & Attribute.Required;
-    entry: Attribute.Relation<'plugin::content-releases.release-action', 'morphToOne'>;
+    entry: Attribute.Relation<
+      'plugin::content-releases.release-action',
+      'morphToOne'
+    >;
     contentType: Attribute.String & Attribute.Required;
     locale: Attribute.String;
     release: Attribute.Relation<
@@ -512,14 +615,23 @@ export interface PluginI18NLocale extends Schema.CollectionType {
     code: Attribute.String & Attribute.Unique;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'plugin::i18n.locale', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'plugin::i18n.locale',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'plugin::i18n.locale', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'plugin::i18n.locale',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
 
-export interface PluginUsersPermissionsPermission extends Schema.CollectionType {
+export interface PluginUsersPermissionsPermission
+  extends Schema.CollectionType {
   collectionName: 'up_permissions';
   info: {
     name: 'permission';
@@ -597,9 +709,17 @@ export interface PluginUsersPermissionsRole extends Schema.CollectionType {
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'plugin::users-permissions.role', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'plugin::users-permissions.role',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'plugin::users-permissions.role', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'plugin::users-permissions.role',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -646,9 +766,17 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'plugin::users-permissions.user', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'plugin::users-permissions.user', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'plugin::users-permissions.user',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -666,16 +794,40 @@ export interface ApiClassroomClassroom extends Schema.CollectionType {
   };
   attributes: {
     ClassName: Attribute.String & Attribute.Required;
-    subjects: Attribute.Relation<'api::classroom.classroom', 'manyToMany', 'api::subject.subject'>;
-    students: Attribute.Relation<'api::classroom.classroom', 'manyToMany', 'api::student.student'>;
-    teachers: Attribute.Relation<'api::classroom.classroom', 'manyToMany', 'api::teacher.teacher'>;
-    rooms: Attribute.Relation<'api::classroom.classroom', 'manyToMany', 'api::room.room'>;
+    subjects: Attribute.Relation<
+      'api::classroom.classroom',
+      'manyToMany',
+      'api::subject.subject'
+    >;
+    students: Attribute.Relation<
+      'api::classroom.classroom',
+      'manyToMany',
+      'api::student.student'
+    >;
+    teachers: Attribute.Relation<
+      'api::classroom.classroom',
+      'manyToMany',
+      'api::teacher.teacher'
+    >;
+    rooms: Attribute.Relation<
+      'api::classroom.classroom',
+      'manyToMany',
+      'api::room.room'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::classroom.classroom', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'api::classroom.classroom',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'api::classroom.classroom', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'api::classroom.classroom',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -693,13 +845,23 @@ export interface ApiRoomRoom extends Schema.CollectionType {
   };
   attributes: {
     Room: Attribute.String & Attribute.Required;
-    subjects: Attribute.Relation<'api::room.room', 'manyToMany', 'api::subject.subject'>;
-    classrooms: Attribute.Relation<'api::room.room', 'manyToMany', 'api::classroom.classroom'>;
+    subjects: Attribute.Relation<
+      'api::room.room',
+      'manyToMany',
+      'api::subject.subject'
+    >;
+    classrooms: Attribute.Relation<
+      'api::room.room',
+      'manyToMany',
+      'api::classroom.classroom'
+    >;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::room.room', 'oneToOne', 'admin::user'> & Attribute.Private;
-    updatedBy: Attribute.Relation<'api::room.room', 'oneToOne', 'admin::user'> & Attribute.Private;
+    createdBy: Attribute.Relation<'api::room.room', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<'api::room.room', 'oneToOne', 'admin::user'> &
+      Attribute.Private;
   };
 }
 
@@ -730,7 +892,11 @@ export interface ApiStudentStudent extends Schema.CollectionType {
       }>;
     Confirm: Attribute.Boolean;
     address: Attribute.Text;
-    subjects: Attribute.Relation<'api::student.student', 'oneToMany', 'api::subject.subject'>;
+    subjects: Attribute.Relation<
+      'api::student.student',
+      'oneToMany',
+      'api::subject.subject'
+    >;
     classrooms: Attribute.Relation<
       'api::student.student',
       'manyToMany',
@@ -739,9 +905,17 @@ export interface ApiStudentStudent extends Schema.CollectionType {
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::student.student', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'api::student.student',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'api::student.student', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'api::student.student',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -761,9 +935,21 @@ export interface ApiSubjectSubject extends Schema.CollectionType {
     Name: Attribute.String;
     Code: Attribute.String;
     credit: Attribute.String;
-    teacher: Attribute.Relation<'api::subject.subject', 'manyToOne', 'api::teacher.teacher'>;
-    student: Attribute.Relation<'api::subject.subject', 'manyToOne', 'api::student.student'>;
-    rooms: Attribute.Relation<'api::subject.subject', 'manyToMany', 'api::room.room'>;
+    teacher: Attribute.Relation<
+      'api::subject.subject',
+      'manyToOne',
+      'api::teacher.teacher'
+    >;
+    student: Attribute.Relation<
+      'api::subject.subject',
+      'manyToOne',
+      'api::student.student'
+    >;
+    rooms: Attribute.Relation<
+      'api::subject.subject',
+      'manyToMany',
+      'api::room.room'
+    >;
     classrooms: Attribute.Relation<
       'api::subject.subject',
       'manyToMany',
@@ -772,9 +958,17 @@ export interface ApiSubjectSubject extends Schema.CollectionType {
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::subject.subject', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'api::subject.subject',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'api::subject.subject', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'api::subject.subject',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
@@ -795,7 +989,11 @@ export interface ApiTeacherTeacher extends Schema.CollectionType {
     Email: Attribute.Email & Attribute.Required;
     PhoneNumber: Attribute.BigInteger;
     address: Attribute.Text;
-    subjects: Attribute.Relation<'api::teacher.teacher', 'oneToMany', 'api::subject.subject'>;
+    subjects: Attribute.Relation<
+      'api::teacher.teacher',
+      'oneToMany',
+      'api::subject.subject'
+    >;
     classrooms: Attribute.Relation<
       'api::teacher.teacher',
       'manyToMany',
@@ -804,14 +1002,23 @@ export interface ApiTeacherTeacher extends Schema.CollectionType {
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<'api::teacher.teacher', 'oneToOne', 'admin::user'> &
+    createdBy: Attribute.Relation<
+      'api::teacher.teacher',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
-    updatedBy: Attribute.Relation<'api::teacher.teacher', 'oneToOne', 'admin::user'> &
+    updatedBy: Attribute.Relation<
+      'api::teacher.teacher',
+      'oneToOne',
+      'admin::user'
+    > &
       Attribute.Private;
   };
 }
 
-export interface ApiWeatherAuthorizationWeatherAuthorization extends Schema.CollectionType {
+export interface ApiWeatherAuthorizationWeatherAuthorization
+  extends Schema.CollectionType {
   collectionName: 'weather_authorizations';
   info: {
     singularName: 'weather-authorization';
@@ -826,6 +1033,12 @@ export interface ApiWeatherAuthorizationWeatherAuthorization extends Schema.Coll
     name: Attribute.String;
     email: Attribute.Email & Attribute.Unique;
     role: Attribute.String & Attribute.Required;
+    tel: Attribute.String &
+      Attribute.Required &
+      Attribute.SetMinMaxLength<{
+        minLength: 10;
+        maxLength: 10;
+      }>;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

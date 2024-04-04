@@ -6,10 +6,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import PageContainer from 'src/components/container/PageContainer';
 import DashboardCard from '../../components/shared/DashboardCard';
 import { getUsers, addUser, updateUser, deleteUser } from 'src/api/apiUser'; // Import functions from api.js
+import { Telegram } from '@mui/icons-material';
 
 const AdminPage = () => {
     const [users, setUsers] = useState([]);
-    const [newUserData, setNewUserData] = useState({ name: '', email: '', role: '' });
+    const [newUserData, setNewUserData] = useState({ name: '', email: '', role: '', tel: ''});
     const [modalOpen, setModalOpen] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
@@ -40,7 +41,8 @@ const AdminPage = () => {
             setNewUserData({
                 name: userToEdit.attributes.name,
                 email: userToEdit.attributes.email,
-                role: userToEdit.attributes.role
+                role: userToEdit.attributes.role,
+                tel : userToEdit.attributes.tel
             });
             setSelectedUserId(userId);
         } else {
@@ -111,6 +113,7 @@ const AdminPage = () => {
                                 <TableCell>Name</TableCell>
                                 <TableCell>Email</TableCell>
                                 <TableCell>Role</TableCell>
+                                <TableCell>Tel</TableCell>
                                 <TableCell>Actions</TableCell>
                             </TableRow>
                         </TableHead>
@@ -121,6 +124,7 @@ const AdminPage = () => {
                                     <TableCell>{user.attributes.name}</TableCell>
                                     <TableCell>{user.attributes.email}</TableCell>
                                     <TableCell>{user.attributes.role}</TableCell>
+                                    <TableCell>{user.attributes.tel}</TableCell>
                                     <TableCell>
                                         <Button style={{ marginRight: "1vw" }} variant="outlined" color="primary" startIcon={<EditIcon />} onClick={() => handleOpenModal(true, user.id)}>Edit</Button>
                                         <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => handleDelete(user.id)}>Delete</Button>
@@ -157,7 +161,6 @@ const AdminPage = () => {
                         margin="normal"
                         sx={{ width: "100%" }}
                     /><br />
-
                     <TextField
                         name="role"
                         label="Role"
@@ -171,6 +174,17 @@ const AdminPage = () => {
                         <MenuItem value="admin">Admin</MenuItem>
                         <MenuItem value="user">User</MenuItem>
                     </TextField><br />
+                    <TextField
+                        name="tel"
+                        label="tel"
+                        value={newUserData.tel}
+                        onChange={handleChange}
+                        variant="outlined"
+                        margin="normal"
+                        maxLength="10"
+                        minLength="10"
+                        sx={{ width: "100%"}}
+                    /><br />
                     <div style={{ display: "flex", justifyContent: "flex-end" }}>
                         <Button variant="contained" color="primary" onClick={handleAddOrUpdateUser}>{isEdit ? "Update" : "Add"}</Button>
                     </div>

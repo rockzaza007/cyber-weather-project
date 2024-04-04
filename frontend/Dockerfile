@@ -12,6 +12,7 @@ RUN yarn install
 
 # Copy the remaining application code to the working directory
 COPY . .
+COPY src src
 
 # Build the React app
 RUN yarn build

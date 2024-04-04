@@ -1,7 +1,7 @@
 // api.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:1337/api/weather-authorizations';
+const API_URL = 'http://localhost:9999/api/weather-authorizations';
 
 const getToken = () => process.env.REACT_APP_STRAPI_API_TOKEN;
 
