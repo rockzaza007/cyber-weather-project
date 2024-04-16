@@ -13,13 +13,16 @@ services:
   frontend:
     build:
       dockerfile: Dockerfile
-    image: cyber/app:1.1.1
+    image: cyber/app:1.2.0
     restart: always
     container_name: weather-frontend
     ports:
-      - ${CLIENT_PORT}
+      - ${CLIENT_PORT} 
+    volumes:
+      - ./ngnix.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - my-network
+
   backend:
     build: ../StrapiBackend/
     image: ${SERVER_IMAGE}
@@ -71,4 +74,5 @@ services:
       # - ./caddy_config:/config
     networks:
       - my-network
-      - caddy
+      # - caddy
+  

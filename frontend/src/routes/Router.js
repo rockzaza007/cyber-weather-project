@@ -69,6 +69,7 @@ const RouterisAuth = [
 
 const isAuthenticated = () => {
   return auth.currentUser ? Router : RouterisAuth;
+
 }
 
 export default isAuthenticated;

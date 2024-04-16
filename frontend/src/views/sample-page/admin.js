@@ -7,6 +7,7 @@ import PageContainer from 'src/components/container/PageContainer';
 import DashboardCard from '../../components/shared/DashboardCard';
 import { getUsers, addUser, updateUser, deleteUser } from 'src/api/apiUser'; // Import functions from api.js
 import { Telegram } from '@mui/icons-material';
+import auth from 'src/firebase_config';
 
 const AdminPage = () => {
     const [users, setUsers] = useState([]);
@@ -95,46 +96,52 @@ const AdminPage = () => {
         setNewUserData({ ...newUserData, [name]: value });
     };
 
+    const isAdminEmail = auth.currentUser.email === 's6502041520129@email.kmutnb.ac.th';
     return (
+        
         <PageContainer title="User Management" description="Manage users">
-            <DashboardCard title="User Role">
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
-                    <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={() => handleOpenModal()}>Add Entry</Button>
-                </div>
-                {loading ? (
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
-                        <CircularProgress />
+            {isAdminEmail ? (
+                <DashboardCard title="User Role">
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+                        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={() => handleOpenModal()}>Add Entry</Button>
                     </div>
-                ) : (
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>ID</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Email</TableCell>
-                                <TableCell>Role</TableCell>
-                                <TableCell>Tel</TableCell>
-                                <TableCell>Actions</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {users.map(user => (
-                                <TableRow key={user.id}>
-                                    <TableCell>{user.id}</TableCell>
-                                    <TableCell>{user.attributes.name}</TableCell>
-                                    <TableCell>{user.attributes.email}</TableCell>
-                                    <TableCell>{user.attributes.role}</TableCell>
-                                    <TableCell>{user.attributes.tel}</TableCell>
-                                    <TableCell>
-                                        <Button style={{ marginRight: "1vw" }} variant="outlined" color="primary" startIcon={<EditIcon />} onClick={() => handleOpenModal(true, user.id)}>Edit</Button>
-                                        <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => handleDelete(user.id)}>Delete</Button>
-                                    </TableCell>
+                    {loading ? (
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}>
+                            <CircularProgress />
+                        </div>
+                    ) : (
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>ID</TableCell>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell>Email</TableCell>
+                                    <TableCell>Role</TableCell>
+                                    <TableCell>Tel</TableCell>
+                                    <TableCell>Actions</TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                )}
-            </DashboardCard>
+                            </TableHead>
+                            <TableBody>
+                                {users.map(user => (
+                                    <TableRow key={user.id}>
+                                        <TableCell>{user.id}</TableCell>
+                                        <TableCell>{user.attributes.name}</TableCell>
+                                        <TableCell>{user.attributes.email}</TableCell>
+                                        <TableCell>{user.attributes.role}</TableCell>
+                                        <TableCell>{user.attributes.tel}</TableCell>
+                                        <TableCell>
+                                            <Button style={{ marginRight: "1vw" }} variant="outlined" color="primary" startIcon={<EditIcon />} onClick={() => handleOpenModal(true, user.id)}>Edit</Button>
+                                            <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => handleDelete(user.id)}>Delete</Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    )}
+                </DashboardCard>
+            ) : (
+                <Typography variant="h6">You are not Admin</Typography>
+            )}
             <Modal open={modalOpen} onClose={handleCloseModal} style={{
                 display: 'flex',
                 alignItems: 'center',

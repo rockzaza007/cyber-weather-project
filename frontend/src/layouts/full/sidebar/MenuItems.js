@@ -7,6 +7,8 @@ import {
   IconUserPlus,
 } from '@tabler/icons';
 
+import auth from 'src/firebase_config';
+
 import { uniqueId } from 'lodash';
 
 const Menuitems = [
@@ -30,10 +32,14 @@ const Menuitems = [
     title: 'Weather',
     icon: IconTypography,
     href: '/sample-page',
+  },  {
+    navlabel: true,
+    subheader: 'User Account',
   },
+  
   {
     id: uniqueId(),
-    title: 'User Role',
+    title: 'Role',
     icon: IconCopy,
     href: '/admin',
   },
