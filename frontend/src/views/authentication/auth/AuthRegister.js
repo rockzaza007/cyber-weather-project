@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Typography, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CustomTextField from '../../../components/forms/theme-elements/CustomTextField';
+import { registerUser } from '../../../api/apiAuth'; // Import the registerUser function
 
 const AuthRegister = () => {
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -18,18 +20,11 @@ const AuthRegister = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:9999/api/auth/local/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
+      // Call the registerUser function from apiAuth.js
+      const data = await registerUser(formData.username, formData.email, formData.password);
 
       // Handle response data
-      console.log(data); // For testing purposes
+      navigate('/auth/login')
     } catch (error) {
       console.error('Error:', error);
     }
@@ -37,7 +32,7 @@ const AuthRegister = () => {
 
   return (
     <>
-      <Typography fontWeight="700" variant="h2" mb={1}>
+      <Typography fontWeight="700" variant="h2" mb={1} style={{ textAlign: "center" }}>
         Register
       </Typography>
 
@@ -47,17 +42,18 @@ const AuthRegister = () => {
           name="username"
           label="Username"
           variant="outlined"
+          margin="normal"
           fullWidth
           value={formData.username}
           onChange={handleChange}
-        />{' '}
-        <br />
+        />
         <CustomTextField
           id="email"
           name="email"
           label="Email"
           type="email"
           variant="outlined"
+          margin="normal"
           fullWidth
           value={formData.email}
           onChange={handleChange}
@@ -68,17 +64,31 @@ const AuthRegister = () => {
           label="Password"
           type="password"
           variant="outlined"
+          margin="normal"
           fullWidth
           value={formData.password}
           onChange={handleChange}
         />
-        <Button color="primary" variant="contained" size="large" fullWidth type="submit">
+
+        <Button  variant="contained" size="large" fullWidth type="submit" color='success'>
           Sign Up
         </Button>
       </form>
-
+      <hr />
       <Typography variant="subtitle1" textAlign="center" color="textSecondary">
-        Already have an account? <Link to="/login">Login</Link>
+        Already have an account? 
+        <Typography
+          component={Link}
+          to="/auth/login"
+          fontWeight="500"
+          sx={{
+            textDecoration: 'none',
+            color: 'primary.main',
+          }}
+          style={{ marginLeft: '4px' }}
+        >
+          Sign in
+        </Typography>
       </Typography>
     </>
   );

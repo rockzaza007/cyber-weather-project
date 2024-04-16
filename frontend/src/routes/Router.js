@@ -2,6 +2,7 @@ import React, { lazy } from 'react';
 import { Navigate } from 'react-router-dom';
 import Loadable from '../layouts/full/shared/loadable/Loadable';
 import auth from '../firebase_config';
+import { isAuthenticated as strapiIsAuthenticated } from '../api/apiAuth'; // Import isAuthenticated function from apiAuth.js
 
 /* ***Layouts**** */
 const FullLayout = Loadable(lazy(() => import('../layouts/full/FullLayout')));
@@ -17,7 +18,6 @@ const Error = Loadable(lazy(() => import('../views/authentication/Error')));
 const Register = Loadable(lazy(() => import('../views/authentication/Register')));
 const Login = Loadable(lazy(() => import('../views/authentication/Login')));
 const AdminPage = Loadable(lazy(() => import('../views/sample-page/admin')));
-//const apiUser = Loadable(lazy(() => import('../api/apiUser')));
 
 const Router = [
   {
@@ -68,8 +68,17 @@ const RouterisAuth = [
 ];
 
 const isAuthenticated = () => {
-  return auth.currentUser ? Router : RouterisAuth;
+  // Check both Firebase and Strapi authentication
+  const firebaseAuthenticated = auth.currentUser;
+  const strapiAuthenticated = strapiIsAuthenticated();
 
+  // If either Firebase or Strapi is authenticated, return the appropriate routes
+  if (firebaseAuthenticated || strapiAuthenticated) {
+    return Router;
+  } else {
+    return RouterisAuth;
+  }
 }
 
 export default isAuthenticated;
+export { RouterisAuth, Router };
