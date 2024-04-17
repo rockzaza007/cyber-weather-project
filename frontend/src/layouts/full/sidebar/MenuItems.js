@@ -48,6 +48,12 @@ const Menuitems = [
     icon: IconCopy,
     href: '/profile',
   },
+  {
+    id: uniqueId(),
+    title: 'Feedback',
+    icon: IconCopy,
+    href: '/feedback',
+  },
   // {
   //   navlabel: true,
   //   subheader: 'Auth',

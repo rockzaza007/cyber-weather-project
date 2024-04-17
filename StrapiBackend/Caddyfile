@@ -4,7 +4,7 @@
 
 https://myapp.local {
     tls internal
-    reverse_proxy host.docker.internal:9999
+    reverse_proxy localhost:9999
 }
 
 https://dev.myapp.local {
