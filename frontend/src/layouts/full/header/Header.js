@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Box, AppBar, Toolbar, styled, Stack, IconButton, Badge, Button } from '@mui/material';
+import { Box, AppBar, Toolbar, styled, Stack, IconButton, Badge, Button, Modal, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import auth from '../../../firebase_config';
-import { getCurrentUser ,isAuthenticated} from 'src/api/apiAuth'; // Import the getCurrentUser function from apiAuth.js
+import { useNavigate } from 'react-router';
+import { getCurrentUser, isAuthenticated, logoutUser } from 'src/api/apiAuth'; // Import the required functions from apiAuth.js
 
 // components
 import Profile from './Profile';
 import { IconBellRinging, IconMenu } from '@tabler/icons';
-import { a } from 'react-spring';
 
 const Header = (props) => {
+  const navigate = useNavigate();
   const [strapiUser, setStrapiUser] = useState({}); // Initialize as empty object
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -27,6 +29,44 @@ const Header = (props) => {
       fetchUser();
     }
   }, []);
+
+  const handleUserActivity = () => {
+    localStorage.setItem('lastActivity', Date.now());
+  };
+
+  const checkSessionExpiration = () => {
+    const lastActivity = localStorage.getItem('lastActivity');
+    if (lastActivity) {
+      const elapsedTime = Date.now() - parseInt(lastActivity);
+      const sessionExpirationTime = 30 * 60 * 1000; // 30 minutes in milliseconds
+      if (elapsedTime >= sessionExpirationTime) {
+        setShowModal(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousemove', handleUserActivity);
+    document.addEventListener('keydown', handleUserActivity);
+    const interval = setInterval(checkSessionExpiration, 60000); // Check every minute
+    return () => {
+      document.removeEventListener('mousemove', handleUserActivity);
+      document.removeEventListener('keydown', handleUserActivity);
+      clearInterval(interval);
+    };
+  }, []);
+
+  const logoutAndCloseModal = () => {
+    logoutUser();
+    setShowModal(false);
+    navigate('/auth/login');
+  };
+
+  const logoutAndCloseModalOnBackdropClick = () => {
+    logoutUser();
+    setShowModal(false);
+    navigate('/auth/login');
+  };
 
   const AppBarStyled = styled(AppBar)(({ theme }) => ({
     boxShadow: 'none',
@@ -60,7 +100,6 @@ const Header = (props) => {
           <IconMenu width="20" height="20" />
         </IconButton>
 
-
         <IconButton
           size="large"
           aria-label="show 11 new notifications"
@@ -76,9 +115,10 @@ const Header = (props) => {
           <Badge variant="dot" color="primary">
             <IconBellRinging size="21" stroke="1.5" />
           </Badge>
-
         </IconButton>
+
         <Box flexGrow={1} />
+
         <Stack spacing={1} direction="row" alignItems="center">
           <span style={{
             fontFamily: "'Poppins', sans-serif", // Example font
@@ -91,6 +131,40 @@ const Header = (props) => {
           <Profile />
         </Stack>
       </ToolbarStyled>
+
+      {/* Notification Modal */}
+      <Modal
+        open={showModal}
+        onClose={logoutAndCloseModal}
+        aria-labelledby="session-expiration-modal"
+        aria-describedby="session-expiration-modal-description"
+        BackdropProps={{
+          onClick: logoutAndCloseModalOnBackdropClick,
+        }}
+        style={{ borderRadius: '8px'}}
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          p: 4,
+          alignItems: 'center',
+        }}>
+          <Typography id="session-expiration-modal" variant="h5" component="h2" gutterBottom>
+            Session Expiration
+          </Typography>
+          <Typography id="session-expiration-modal-description" variant="body1" gutterBottom>
+            Your session has expired. Please log in again.
+          </Typography>
+          <Button onClick={logoutAndCloseModal} variant="contained" color="primary">
+            Log In
+          </Button>
+        </Box>
+      </Modal>
     </AppBarStyled>
   );
 };

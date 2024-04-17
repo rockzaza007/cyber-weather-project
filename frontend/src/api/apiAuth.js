@@ -35,6 +35,20 @@ export const registerUser = async (username, email, password) => {
   }
 };
 
+// Function to update user profile
+export const updateUserProfile = async (id, updatedUserData) => {
+  try {
+    const response = await axios.put(`${BASE_URL}/api/users/${id}`, updatedUserData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Function to logout user
 export const logoutUser = async () => {
   try {

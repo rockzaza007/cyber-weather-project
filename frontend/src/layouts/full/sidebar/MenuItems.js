@@ -36,12 +36,17 @@ const Menuitems = [
     navlabel: true,
     subheader: 'User Account',
   },
-  
   {
     id: uniqueId(),
     title: 'Role',
     icon: IconCopy,
     href: '/admin',
+  },
+  {
+    id: uniqueId(),
+    title: 'Profile',
+    icon: IconCopy,
+    href: '/profile',
   },
   // {
   //   navlabel: true,
