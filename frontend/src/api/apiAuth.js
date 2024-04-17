@@ -71,7 +71,7 @@ export const isAuthenticated = () => {
 // Function to get the current user
 export const getCurrentUser = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}/api/users/me`, {
+    const response = await axios.get(`${BASE_URL}/api/users/me?populate=photoURL`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },

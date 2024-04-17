@@ -42,7 +42,7 @@ const Profile = () => {
       console.error('Error:', error);
     }
   };
-  console.log(auth.currentUser);
+  // console.log(strapiUser.photoURL);
 
   return (
     <Box>
@@ -55,8 +55,8 @@ const Profile = () => {
         onClick={handleClick2}
       >
         <Avatar
-          src={auth.currentUser ? auth.currentUser.photoURL : null}
-          alt={auth.currentUser ? auth.currentUser.displayName : ''}
+          src={strapiUser?.photoURL?.url ? `http://localhost:9999${strapiUser.photoURL.url}` : auth.currentUser?.photoURL || null}
+          alt={strapiUser?.username || auth.currentUser?.displayName || ''}
           sx={{
             width: 35,
             height: 35,
@@ -82,7 +82,7 @@ const Profile = () => {
           <div style={{ padding: "7%", textAlign: 'center', alignItems: 'center' }}>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <Avatar
-                src={strapiUser.photoURL}
+                src={strapiUser.photoURL?.url ? `http://localhost:9999${strapiUser.photoURL.url}` : null}
                 alt={strapiUser.username}
                 sx={{
                   width: 85,

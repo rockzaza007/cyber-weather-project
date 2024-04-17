@@ -18,3 +18,17 @@ export const sendFeedback = async (feedback) => {
     throw error;
   }
 };
+
+export const getFeedbacks = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/feedbacks`, {
+        headers: {
+            Authorization: `Bearer ${getToken()}`
+        }
+    });
+    return response.data;
+    }
+    catch (error) {
+        throw error;
+    }
+}

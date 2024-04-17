@@ -3,7 +3,7 @@ import { Typography, Button, Avatar, Grid, TextField, Container, Box, IconButton
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
-import { getCurrentUser, updateUserProfile } from 'src/api/apiAuth'; // Import the getCurrentUser function from apiAuth.js
+import { getCurrentUser, updateUserProfile } from 'src/api/apiAuth'; // Import the getCurrentUser and updateUserProfile functions from apiAuth.js
 import CustomTextField from 'src/components/forms/theme-elements/CustomTextField';
 
 const ProfilePage = () => {
@@ -31,18 +31,38 @@ const ProfilePage = () => {
 
     const handleSaveClick = async () => {
         try {
-          await updateUserProfile(user.id, editedUser);
-          // Update the user state with the edited data
-          setUser(editedUser);
-          setOpenEditModal(false);
+            // Call the updateUserProfile function with the edited user data
+            await updateUserProfile(user.id, editedUser);
+            // Update the user state with the edited data
+            setUser(editedUser);
+            setOpenEditModal(false);
         } catch (error) {
-          console.error('Error updating user profile:', error);
+            console.error('Error updating user profile:', error);
         }
-      };
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setEditedUser({ ...editedUser, [name]: value });
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = () => {
+            setEditedUser({
+                ...editedUser,
+                photoURL: {
+                    url: `http://localhost:9999${reader.result}`,
+                    formats: {
+                        thumbnail: {
+                            url: `http://localhost:9999${reader.result}`,
+                        }
+                    }
+                }
+            });
+        };
+        reader.readAsDataURL(file);
     };
 
     const handleCloseEditModal = () => {
@@ -57,7 +77,16 @@ const ProfilePage = () => {
             {user && (
                 <Grid container spacing={3} alignItems="center">
                     <Grid item xs={12} sm={4}>
-                        <Avatar src={user.photoURL} alt={user.displayName} sx={{ width: 200, height: 200 }} />
+                        <label htmlFor="upload-photo">
+                            <Avatar src={editedUser.photoURL ? `http://localhost:9999${editedUser.photoURL.url}` : user.photoURL ? `http://localhost:9999${user.photoURL.url}` : null} alt={user.displayName} sx={{ width: 200, height: 200 }} />
+                            <input
+                                id="upload-photo"
+                                type="file"
+                                accept="image/*"
+                                style={{ display: 'none' }}
+                                onChange={handleImageChange}
+                            />
+                        </label>
                     </Grid>
                     <Grid item xs={12} sm={8}>
                         <Box display="flex" alignItems="center">
@@ -71,11 +100,10 @@ const ProfilePage = () => {
                                 margin="normal"
                                 fullWidth
                                 value={user.username}
-
                             />
                         </Box>
                         <Box display="flex" alignItems="center">
-                        <CustomTextField
+                            <CustomTextField
                                 InputProps={{
                                     readOnly: true,
                                 }}
@@ -85,7 +113,6 @@ const ProfilePage = () => {
                                 margin="normal"
                                 fullWidth
                                 value={user.email}
-
                             />
                         </Box>
                         <Box mt={2}>
