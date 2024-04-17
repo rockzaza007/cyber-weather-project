@@ -32,7 +32,14 @@ const Menuitems = [
     title: 'Weather',
     icon: IconTypography,
     href: '/sample-page',
-  },  {
+  },  
+  {
+    id: uniqueId(),
+    title: 'Station',
+    icon: IconMoodHappy,
+    href: '/stations',
+  },  
+  {
     navlabel: true,
     subheader: 'User Account',
   },

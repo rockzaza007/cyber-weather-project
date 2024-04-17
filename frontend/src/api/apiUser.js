@@ -23,7 +23,7 @@ export const getUsers = async () => {
 
 export const addUser = async (data) => {
   try {
-    await axios.post(API_URL, {data}, {
+    await axios.post(API_URL, { data }, {
       headers: {
         Authorization: `Bearer ${getToken()}`
       }
@@ -35,7 +35,7 @@ export const addUser = async (data) => {
 
 export const updateUser = async (id, data) => {
   try {
-    await axios.put(`${API_URL}/${id}`, {data}, {
+    await axios.put(`${API_URL}/${id}`, { data }, {
       headers: {
         Authorization: `Bearer ${getToken()}`
       }

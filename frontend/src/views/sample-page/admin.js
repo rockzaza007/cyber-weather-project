@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Table, TableHead, TableBody, TableRow, TableCell, Button, TextField, Modal, Dialog, DialogTitle, DialogContent, DialogActions, CircularProgress,MenuItem } from '@mui/material';
+import { Typography, Table, TableHead, TableBody, TableRow, TableCell, Button, TextField, Modal, Dialog, DialogTitle, DialogContent, DialogActions, CircularProgress, MenuItem } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -11,7 +11,7 @@ import auth from 'src/firebase_config';
 
 const AdminPage = () => {
     const [users, setUsers] = useState([]);
-    const [newUserData, setNewUserData] = useState({ name: '', email: '', role: '', tel: ''});
+    const [newUserData, setNewUserData] = useState({ name: '', email: '', role: '', tel: '' });
     const [modalOpen, setModalOpen] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
@@ -43,7 +43,7 @@ const AdminPage = () => {
                 name: userToEdit.attributes.name,
                 email: userToEdit.attributes.email,
                 role: userToEdit.attributes.role,
-                tel : userToEdit.attributes.tel
+                tel: userToEdit.attributes.tel
             });
             setSelectedUserId(userId);
         } else {
@@ -98,7 +98,7 @@ const AdminPage = () => {
 
     const isAdminEmail = auth.currentUser.email === 's6502041520129@email.kmutnb.ac.th';
     return (
-        
+
         <PageContainer title="User Management" description="Manage users">
             {isAdminEmail ? (
                 <DashboardCard title="User Role">
@@ -190,7 +190,7 @@ const AdminPage = () => {
                         margin="normal"
                         maxLength="10"
                         minLength="10"
-                        sx={{ width: "100%"}}
+                        sx={{ width: "100%" }}
                     /><br />
                     <div style={{ display: "flex", justifyContent: "flex-end" }}>
                         <Button variant="contained" color="primary" onClick={handleAddOrUpdateUser}>{isEdit ? "Update" : "Add"}</Button>
