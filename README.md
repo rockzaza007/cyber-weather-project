@@ -74,9 +74,10 @@ weather-app/
 
 3. **Running the Application:**
 
-    Navigate to the root directory of the project and run:
+    Navigate to the frontend directory of the project and run:
 
     ```bash
+    cd frontend
     docker-compose up -d
     ```
 
@@ -101,7 +102,7 @@ To work on the frontend application:
 2. Install dependencies:
 
     ```bash
-    npm install || || yarn install
+    npm install || yarn install
     ```
 
 3. Start the development server:
