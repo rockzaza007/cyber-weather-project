@@ -59,6 +59,25 @@ const StationPage = () => {
     };
 
     const handleAddOrUpdateStation = async () => {
+
+        if (!newStationData.Name || !newStationData.Tel || !newStationData.email) {
+            alert('Name, Tel, and Email are required fields.');
+            return; // Stop execution if required fields are empty
+        }
+
+        // Check if the email field matches the email format using regular expression
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(newStationData.email)) {
+            alert('Please enter a valid email address.');
+            return; // Stop execution if email format is invalid
+        }
+        
+        const telRegex = /^\d{10}$/; // Assuming telephone number is 10 digits long
+        if (!telRegex.test(newStationData.Tel)) {
+            alert('Please enter a valid telephone number (10 digits without spaces or special characters).');
+            return; // Stop execution if telephone number format is invalid
+        }
+        
         if (isEdit && selectedStationId) {
             try {
                 await updateStation(selectedStationId, { data: newStationData });
@@ -100,9 +119,9 @@ const StationPage = () => {
         <PageContainer title="Station Management" description="Manage users">
             <DashboardCard title="Station Management">
                 <div>
-                    <Button onClick={() => handleOpenModal()} startIcon={<AddIcon />}>
-                        Add Station
-                    </Button>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+                        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={() => handleOpenModal()}>Add Station</Button>
+                    </div>
                     <Table>
                         <TableHead>
                             <TableRow>
@@ -125,8 +144,8 @@ const StationPage = () => {
                                     <TableCell>{station.attributes.People}</TableCell>
                                     <TableCell>{station.attributes.email}</TableCell>
                                     <TableCell>
-                                        <Button onClick={() => handleOpenModal(true, station.id)}><EditIcon /></Button>
-                                        <Button onClick={() => handleDelete(station.id)}><DeleteIcon /></Button>
+                                        <Button style={{ marginRight: "1vw" }} variant="outlined" color="primary" startIcon={<EditIcon />} onClick={() => handleOpenModal(true, station.id)}>Edit</Button>
+                                        <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => handleDelete(station.id)}>Delete</Button>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -141,6 +160,7 @@ const StationPage = () => {
                         <div style={{ backgroundColor: "white", padding: "3%", borderRadius: "12px", width: "30vw" }}>
                             <Typography variant="h6">{isEdit ? 'Edit Station' : 'Add Station'}</Typography>
                             <TextField
+                                required
                                 name="Name"
                                 label="Name"
                                 value={newStationData.Name}
@@ -168,6 +188,7 @@ const StationPage = () => {
                                 sx={{ width: "100%" }}
                             />
                             <TextField
+                                required
                                 name="Tel"
                                 label="Tel"
                                 value={newStationData.Tel}
@@ -186,16 +207,21 @@ const StationPage = () => {
                                 sx={{ width: "100%" }}
                             />
                             <TextField
+                                required
                                 name="email"
                                 label="Email"
                                 value={newStationData.email}
                                 onChange={handleChange}
                                 variant="outlined"
                                 margin="normal"
+                                type="email"
                                 sx={{ width: "100%" }}
                             />
-                            <Button onClick={handleAddOrUpdateStation}>{isEdit ? 'Update' : 'Add'}</Button>
-                            <Button onClick={handleCloseModal}>Cancel</Button>
+                            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                                <Button variant="contained" color="primary" onClick={handleAddOrUpdateStation}>{isEdit ? 'Update' : 'Add'}</Button>
+                                <Button variant="contained" color="error" style={{ marginLeft: "1vw" }} onClick={handleCloseModal}>Cancel</Button>
+                            </div>
+
                         </div>
                     </Modal>
                     <Dialog open={deleteConfirmationOpen} onClose={() => setDeleteConfirmationOpen(false)}>
