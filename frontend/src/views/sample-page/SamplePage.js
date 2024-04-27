@@ -9,6 +9,7 @@ import DashboardCard from '../../components/shared/DashboardCard'; // นำเ�
 import { db } from '../../firebase_config'; // นำเข้า Firebase Firestore instance จาก firebase_config.js
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore"; // นำเข้าฟังก์ชันที่ใช้จัดการข้อมูล Firestore
 import CustomModal from './modalWeather';
+import { getRoles } from 'src/api/apiAuth'; // นำเข้าฟังก์ชัน getRoles จาก apiAuth.js
 
 const SamplePage = () => { // สร้างคอมโพเนนต์ SamplePage
   const [weatherData, setWeatherData] = useState(null); // กำหนด state สำหรับเก็บข้อมูลสภาพอากาศ

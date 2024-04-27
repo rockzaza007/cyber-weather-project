@@ -45,7 +45,7 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: 'Role',
+    title: 'User',
     icon: IconCopy,
     href: '/admin',
   },

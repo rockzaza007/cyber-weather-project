@@ -6,12 +6,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import PageContainer from 'src/components/container/PageContainer';
 import DashboardCard from '../../components/shared/DashboardCard';
 import { getUsers, addUser, updateUser, deleteUser } from 'src/api/apiUser'; // Import functions from api.js
-import { Telegram } from '@mui/icons-material';
+import { Password, Telegram } from '@mui/icons-material';
 import auth from 'src/firebase_config';
+import { isRoles } from 'src/api/apiAuth';
+import { is } from '@react-spring/shared';
 
 const AdminPage = () => {
-    const [users, setUsers] = useState([]);
-    const [newUserData, setNewUserData] = useState({ name: '', email: '', role: '', tel: '' });
+    const [users, setUsers] = useState({});
+    const [newUserData, setNewUserData] = useState({ username: '', email: '', password: '', confirmed: '', blocked: '', role: '' });
     const [modalOpen, setModalOpen] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
@@ -27,7 +29,7 @@ const AdminPage = () => {
         setLoading(true);
         try {
             const userData = await getUsers();
-            setUsers(userData.data); // Extract user data from the response
+            setUsers(userData); // Extract user data from the response
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -40,14 +42,16 @@ const AdminPage = () => {
         if (editMode) {
             const userToEdit = users.find(user => user.id === userId);
             setNewUserData({
-                name: userToEdit.attributes.name,
-                email: userToEdit.attributes.email,
-                role: userToEdit.attributes.role,
-                tel: userToEdit.attributes.tel
+                name: userToEdit.username,
+                email: userToEdit.email,
+                password: userToEdit.password,
+                confirmed: userToEdit.confirmed,
+                blocked: userToEdit.blocked,
+                role: userToEdit.role.id
             });
             setSelectedUserId(userId);
         } else {
-            setNewUserData({ name: '', email: '', role: '' });
+            setNewUserData({ username: '', email: '', confirmed: '', blocked: '' });
         }
         setModalOpen(true);
     };
@@ -59,6 +63,15 @@ const AdminPage = () => {
     };
 
     const handleAddOrUpdateUser = async () => {
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+        // Check if password meets the criteria
+        if (!passwordRegex.test(newUserData.password)) {
+            alert("Password must contain minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.");
+            return;
+        }
+
         if (isEdit && selectedUserId) {
             try {
                 await updateUser(selectedUserId, newUserData);
@@ -67,7 +80,13 @@ const AdminPage = () => {
             }
         } else {
             try {
-                await addUser(newUserData);
+                const userData = { ...newUserData };
+                if (userData.role) {
+                    userData.role = {
+                        connect: [{ id: userData.role }] // Assuming role ID is provided in the newUserData
+                    };
+                }
+                await addUser(userData);
             } catch (error) {
                 console.error('Error adding user:', error);
             }
@@ -96,7 +115,21 @@ const AdminPage = () => {
         setNewUserData({ ...newUserData, [name]: value });
     };
 
-    const isAdminEmail = auth.currentUser.email === 's6502041520129@email.kmutnb.ac.th';
+    const role = () => {
+        if (localStorage.getItem('role') === 'Super-Admin') {
+            return 'Super-Admin';
+        }
+    };
+
+    const roleOptions = [
+        { value: '1', label: 'Authenticated' },
+        { value: '2', label: 'Public' },
+        { value: '3', label: 'Super-Admin' },
+        { value: '4', label: 'Default-Admin' }
+    ];
+
+    const isAdminEmail = role() === 'Super-Admin';
+
     return (
 
         <PageContainer title="User Management" description="Manage users">
@@ -116,31 +149,46 @@ const AdminPage = () => {
                                     <TableCell>ID</TableCell>
                                     <TableCell>Name</TableCell>
                                     <TableCell>Email</TableCell>
-                                    <TableCell>Role</TableCell>
-                                    <TableCell>Tel</TableCell>
+                                    <TableCell>Provider</TableCell>
+                                    <TableCell>Confirmed</TableCell>
+                                    <TableCell>Blocked</TableCell>
+                                    <TableCell>Update at</TableCell>
                                     <TableCell>Actions</TableCell>
                                 </TableRow>
                             </TableHead>
-                            <TableBody>
-                                {users.map(user => (
-                                    <TableRow key={user.id}>
-                                        <TableCell>{user.id}</TableCell>
-                                        <TableCell>{user.attributes.name}</TableCell>
-                                        <TableCell>{user.attributes.email}</TableCell>
-                                        <TableCell>{user.attributes.role}</TableCell>
-                                        <TableCell>{user.attributes.tel}</TableCell>
-                                        <TableCell>
-                                            <Button style={{ marginRight: "1vw" }} variant="outlined" color="primary" startIcon={<EditIcon />} onClick={() => handleOpenModal(true, user.id)}>Edit</Button>
-                                            <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => handleDelete(user.id)}>Delete</Button>
-                                        </TableCell>
+                            {users && users.length > 0 ? (
+                                <TableBody>
+                                    {users.map(user => (
+                                        <TableRow key={user.id}>
+                                            <TableCell>{user.id}</TableCell>
+                                            <TableCell>{user.username}</TableCell>
+                                            <TableCell>{user.email}</TableCell>
+                                            <TableCell>{user.provider}</TableCell>
+                                            <TableCell sx={{ fontSize: "2rem" }}>{user.confirmed ? "✅" : "❌"}</TableCell>
+                                            <TableCell sx={{ fontSize: "2rem" }}>{user.blocked ? "⛔" : ""}</TableCell>
+                                            <TableCell>{user.updatedAt}</TableCell>
+                                            <TableCell>
+                                                <Button style={{ marginRight: "1vw" }} variant="outlined" color="primary" startIcon={<EditIcon />} onClick={() => handleOpenModal(true, user.id)}>Edit</Button>
+                                                <Button variant="outlined" color="error" startIcon={<DeleteIcon />} onClick={() => handleDelete(user.id)}>Delete</Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            ) : (
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell colSpan={6} style={{ textAlign: 'center' }}>No users found</TableCell>
                                     </TableRow>
-                                ))}
-                            </TableBody>
+                                </TableBody>
+                            )}
                         </Table>
                     )}
                 </DashboardCard>
             ) : (
-                <Typography variant="h6">You are not Admin</Typography>
+                <div style={{ position: "fixed", left: "45%", textAlign: "center", border: "2px solid red", width: "30%", padding: "10px", borderRadius: "8px", backgroundColor: "red", color: "white" }}>
+                    <Typography variant="h1">!</Typography>
+                    <Typography variant="h1">You are not Admin</Typography>
+                </div>
             )}
             <Modal open={modalOpen} onClose={handleCloseModal} style={{
                 display: 'flex',
@@ -151,14 +199,14 @@ const AdminPage = () => {
                 <div style={{ backgroundColor: "white", padding: "3%", borderRadius: "12px", width: "30vw" }}>
                     <Typography variant="h6">{isEdit ? 'Edit User' : 'Add User'}</Typography>
                     <TextField
-                        name="name"
-                        label="Name"
+                        name="username"
+                        label="Username"
                         value={newUserData.name}
                         onChange={handleChange}
                         variant="outlined"
                         margin="normal"
                         sx={{ width: "100%" }}
-                    /><br />
+                    /><br />    
                     <TextField
                         name="email"
                         label="Email"
@@ -168,30 +216,102 @@ const AdminPage = () => {
                         margin="normal"
                         sx={{ width: "100%" }}
                     /><br />
+                    {isEdit ? (
+                        <TextField
+                            name="password"
+                            label="Password"
+                            value={newUserData.password}
+                            onChange={handleChange}
+                            variant="outlined"
+                            margin="normal"
+                            sx={{ width: "100%" }}
+                        >
+                            <br />
+                        </TextField>
+                    ) : (
+                        <TextField
+                            name="password"
+                            label="Password"
+                            value={newUserData.password}
+                            onChange={handleChange}
+                            variant="outlined"
+                            margin="normal"
+                            sx={{ width: "100%" }}
+                        >
+                            <br />
+                        </TextField>
+                    )}
+
                     <TextField
-                        name="role"
-                        label="Role"
+                        name="confirmed"
+                        label="Confirmed"
                         select
-                        value={newUserData.role}
+                        value={newUserData.confirmed}
                         onChange={handleChange}
                         variant="outlined"
                         margin="normal"
                         sx={{ width: "100%" }}
                     >
-                        <MenuItem value="admin">Admin</MenuItem>
-                        <MenuItem value="user">User</MenuItem>
+                        <MenuItem value="true">true</MenuItem>
+                        <MenuItem value="false">false</MenuItem>
                     </TextField><br />
                     <TextField
-                        name="tel"
-                        label="tel"
-                        value={newUserData.tel}
+                        name="blocked"
+                        label="Blocked"
+                        select
+                        value={newUserData.blocked}
                         onChange={handleChange}
                         variant="outlined"
                         margin="normal"
                         maxLength="10"
                         minLength="10"
                         sx={{ width: "100%" }}
-                    /><br />
+                    >
+                        <MenuItem value="true">Blocked</MenuItem>
+                        <MenuItem value="false">No</MenuItem>
+                    </TextField>
+
+                    {isEdit ? (
+                        <TextField
+                            disabled
+                            name="role"
+                            label="Role"
+                            select
+                            value={newUserData.role}
+                            variant="outlined"
+                            margin="normal"
+                            maxLength="10"
+                            minLength="10"
+                            sx={{ width: "100%" }}
+                        >
+                            {roleOptions.map(option => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    ) : (
+                        <TextField
+                            name="role"
+                            label="Role"
+                            select
+                            value={newUserData.role}
+                            onChange={handleChange}
+                            variant="outlined"
+                            margin="normal"
+                            maxLength="10"
+                            minLength="10"
+                            sx={{ width: "100%" }}
+                        >
+                            {roleOptions.map(option => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    )}
+
+                    <br />
                     <div style={{ display: "flex", justifyContent: "flex-end" }}>
                         <Button variant="contained" color="primary" onClick={handleAddOrUpdateUser}>{isEdit ? "Update" : "Add"}</Button>
                     </div>

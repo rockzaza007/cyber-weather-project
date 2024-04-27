@@ -11,10 +11,12 @@ export const loginUser = async (email, password) => {
       password: password,
     });
     const { jwt, user } = response.data;
+    
     // Store the JWT token in localStorage
     localStorage.setItem('token', jwt);
     // Optionally, you can store the user data as well
     localStorage.setItem('user', JSON.stringify(user));
+    await getRoles();
     return { jwt, user };
   } catch (error) {
     throw error;
@@ -49,6 +51,23 @@ export const updateUserProfile = async (id, updatedUserData) => {
   }
 };
 
+
+export const getRoles = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/users/me?populate=role`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    const role = response.data.role.name;
+    console.log(role);
+    localStorage.setItem('role', role);
+    return response.data.role.name;
+  } catch (error) {
+    throw error;
+  }
+};  
+
 // Function to logout user
 export const logoutUser = async () => {
   try {
@@ -56,6 +75,7 @@ export const logoutUser = async () => {
     localStorage.removeItem('token');
     // Optionally, clear the user data as well
     localStorage.removeItem('user');
+    localStorage.removeItem('role');
     return true;
   } catch (error) {
     throw error;
@@ -68,6 +88,15 @@ export const isAuthenticated = () => {
   return !!localStorage.getItem('token');
 };
 
+export const isRoles = async () => {
+  const existRole = !!localStorage.getItem('role');
+  let role = "";
+  if (existRole) {
+    return localStorage.getItem('role');
+  }
+  return role;
+}
+
 // Function to get the current user
 export const getCurrentUser = async () => {
   try {
@@ -76,7 +105,7 @@ export const getCurrentUser = async () => {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
-    console.log(response.data);
+    //console.log(response.data);
     return response.data;
   } catch (error) {
     throw error;

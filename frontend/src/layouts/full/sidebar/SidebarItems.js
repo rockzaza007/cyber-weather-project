@@ -5,21 +5,22 @@ import { Box, List } from '@mui/material';
 import NavItem from './NavItem';
 import NavGroup from './NavGroup/NavGroup';
 import auth from 'src/firebase_config';
-import { isAuthenticated } from 'src/api/apiAuth';
+import { isAuthenticated, isRoles } from 'src/api/apiAuth';
 
 const SidebarItems = () => {
   const { pathname } = useLocation();
   const pathDirect = pathname;
 
-  const isLoggedIn = !!auth.currentUser; // Check if the user is logged in
+  // const isLoggedIn = !!auth.currentUser; // Check if the user is logged in
   const strapiIsAuthenticated = isAuthenticated(); // Check if the user is authenticated
+  const strapiRole = localStorage.getItem("role"); // Retrieve the user's role from localStorage
 
   return (
     <Box sx={{ px: 3 }}>
       <List sx={{ pt: 0 }} className="sidebarNav">
         {Menuitems.map((item) => {
 
-          if (item.title === 'Role' && !isLoggedIn) {
+          if (item.title === 'User' && strapiRole !== 'Super-Admin') {
             return null; // Don't render the item
           }
           if (item.title === 'Profile' && !strapiIsAuthenticated) {

@@ -144,7 +144,7 @@ const SalesOverview = () => {
             fillSeriesColor: false,
         },
     };
-    console.log(provinceData);
+    //console.log(provinceData);
     const rainfallData = provinceData ? provinceData.map((station) => ({
         name: station.StationNameEnglish._text, // Use station name as the series name
         data: [
